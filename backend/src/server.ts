@@ -12,6 +12,35 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 const NASA_API_KEY = process.env.NASA_API_KEY || 'DEMO_KEY';
 
+// Configure CORS allowed domains
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
+      "https://upsun-deployment-xiwfmii-hicxhmcu6rthk.ch-1.platformsh.site",
+      "https://www.upsun-deployment-xiwfmii-hicxhmcu6rthk.ch-1.platformsh.site",
+    ];
+
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id', 'x-profile-id'],
+  credentials: true,
+  maxAge: 86400 // 24 hours
+};
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -20,7 +49,7 @@ const limiter = rateLimit({
 
 app.use(helmet());
 app.use(compression());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(limiter);
 

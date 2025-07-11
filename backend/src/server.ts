@@ -22,6 +22,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
       'http://127.0.0.1:3001',
       "https://upsun-deployment-xiwfmii-hicxhmcu6rthk.ch-1.platformsh.site",
       "https://www.upsun-deployment-xiwfmii-hicxhmcu6rthk.ch-1.platformsh.site",
+      "https://nasa-three-kohl.vercel.app"
     ];
 
 const corsOptions = {
